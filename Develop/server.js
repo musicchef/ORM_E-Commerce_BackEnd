@@ -7,21 +7,6 @@ const Category = require('./models/Category');
 const Tag = require('./models/Tag');
 const ProductTag = require('./models/ProductTag');
 
-// Define associations and synchronize models
-Product.belongsTo(Category, {
-  foreignKey: 'category_id',
-});
-Product.belongsToMany(Tag, {
-  through: ProductTag,
-  foreignKey: 'product_id',
-});
-Category.hasMany(Product, {
-  foreignKey: 'category_id',
-});
-Tag.belongsToMany(Product, {
-  through: ProductTag,
-  foreignKey: 'tag_id',
-});
 
 // Sync Sequelize models with the database
 sequelize.sync({ force: false }).then(() => {
