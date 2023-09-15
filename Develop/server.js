@@ -1,6 +1,30 @@
 const express = require('express');
 const routes = require('./routes');
 // import sequelize connection
+const sequelize = require('./config/connection');
+const Product = require('./models/Product');
+const Category = require('./models/Category');
+const Tag = require('./models/Tag');
+const ProductTag = require('./models/ProductTag');
+
+// Define associations and synchronize models
+Product.belongsTo(Category, {
+  foreignKey: 'category_id',
+});
+Product.belongsToMany(Tag, {
+  through: ProductTag,
+  foreignKey: 'product_id',
+});
+Category.hasMany(Product, {
+  foreignKey: 'category_id',
+});
+Tag.belongsToMany(Product, {
+  through: ProductTag,
+  foreignKey: 'tag_id',
+});
+
+// Sync Sequelize models with the database
+sequelize.sync({ force: false }).then(() => {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,4 +37,5 @@ app.use(routes);
 // sync sequelize models to the database, then turn on the server
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
+});
 });
